@@ -1,0 +1,75 @@
+attackerLocated(internet).
+attackGoal(execCode(workStation6,_)).
+
+hacl(internet, fireWall, tcp, 443).
+hacl(fireWall, webServer, _, _).
+hacl(webServer, workStation1, _, _).
+hacl(workStation1, workStation2, _, _).
+hacl(workStation2, workStation3, _, _).
+hacl(workStation3, workStation4, _, _).
+hacl(workStation4, workStation5, _, _).
+hacl(workStation5, workStation6, _, _).
+hacl(workStation6, workStation1, _, _).
+
+
+
+
+
+
+/* configuration information of webServer */
+vulExists(webServer, 'CVE-2012-0053', https).
+vulProperty('CVE-2012-0053', remoteExploit, privEscalation).
+networkServiceInfo(webServer, https, https, 80, 'Apache httpd').
+nfsExportInfo(webServer, '/export', _anyAccess, fireWall).
+
+
+
+/* configuration information of fiewWall */
+vulExists(fireWall, 'CVE-2012-0883', https).
+vulProperty('CVE-2012-0883', remoteExploit, privEscalation).
+networkServiceInfo(fireWall, https, tcp, 443, 'Apache').
+
+
+/* configuration information of workStation1 */
+nfsExportInfo(workStation1, '/export', _anyAccess, webServer).
+nfsMounted(workStation1,'/usr/local/share', workStation6, '/usr/local/share',read).
+nfsMounted(workStation6,'/usr/local/share', workStation1, '/usr/local/share',read).
+
+localFileProtection(workStation1, root, _, _).
+
+
+/* configuration information of workStation2 */
+nfsMounted(workStation2,'/usr/local/share', workStation1, '/usr/local/share',read).
+nfsMounted(workStation1,'/usr/local/share', workStation2, '/usr/local/share',read).
+
+localFileProtection(workStation2, root, _, _).
+
+
+/* configuration information of workStation3 */
+nfsMounted(workStation3,'/usr/local/share', workStation2, '/usr/local/share',read).
+nfsMounted(workStation2,'/usr/local/share', workStation3, '/usr/local/share',read).
+
+localFileProtection(workStation3, root, _, _).
+
+/* configuration information of workStation4 */
+nfsMounted(workStation4,'/usr/local/share', workStation3, '/usr/local/share',read).
+nfsMounted(workStation3,'/usr/local/share', workStation4, '/usr/local/share',read).
+
+localFileProtection(workStation4, root, _, _).
+
+/* configuration information of workStation5 */
+nfsMounted(workStation5,'/usr/local/share', workStation4, '/usr/local/share',read).
+nfsMounted(workStation4,'/usr/local/share', workStation5, '/usr/local/share',read).
+
+localFileProtection(workStation5, root, _, _).
+
+/* configuration information of workStation6 */
+nfsMounted(workStation6,'/usr/local/share', workStation5, '/usr/local/share',read).
+nfsMounted(workStation5,'/usr/local/share', workStation6, '/usr/local/share',read).
+
+localFileProtection(workStation6, root, _, _).
+
+
+
+
+

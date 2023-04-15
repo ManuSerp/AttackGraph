@@ -1,0 +1,28 @@
+attackerLocated(internet).
+attackGoal(execCode(workStation1,_)).
+
+hacl(internet, fireWall, tcp, 443).
+hacl(fireWall, webServer, _, _).
+hacl(webServer, workStation1, _, _).
+
+
+
+
+/* configuration information of webServer */
+vulExists(webServer, 'CVE-2012-0053', https).
+vulProperty('CVE-2012-0053', remoteExploit, privEscalation).
+networkServiceInfo(webServer, https, https, 80, 'Apache httpd').
+nfsExportInfo(webServer, '/export', _anyAccess, fireWall).
+
+
+
+/* configuration information of fiewWall */
+vulExists(fireWall, 'CVE-2012-0883', https).
+vulProperty('CVE-2012-0883', remoteExploit, privEscalation).
+networkServiceInfo(fireWall, https, tcp, 443, 'Apache').
+
+
+/* configuration information of workStation1 */
+nfsExportInfo(workStation1, '/export', _anyAccess, webServer).
+
+
